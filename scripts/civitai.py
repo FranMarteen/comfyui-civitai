@@ -183,6 +183,8 @@ def fetch_url(url, dest, name, headers):
                 if done >= next_mark:
                     print(f"       {done / 1e9:.1f} / {total / 1e9:.1f} GB", flush=True)
                     next_mark += 1 << 30
+            fh.flush()
+            os.fsync(fh.fileno())  # force the write through the Drive mount before we report success
     if total and part.stat().st_size != total:
         sys.exit(f"Incomplete download for {name}: {part.stat().st_size} of {total} bytes")
     part.replace(out)
