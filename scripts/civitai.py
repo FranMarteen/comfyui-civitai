@@ -143,19 +143,19 @@ def cmd_get(a):
 
 def cmd_sync(a):
     s = session()
-    manifest = yaml.safe_load(Path(a.manifest).read_text())
-    for entry in manifest.get("civitai", []):
+    manifest = yaml.safe_load(Path(a.manifest).read_text()) or {}
+    for entry in manifest.get("civitai") or []:
         ref = entry["id"] if isinstance(entry, dict) else entry
         dest = entry.get("dest") if isinstance(entry, dict) else None
         download(s, get_version(s, ref), dest)
     hf_token = os.environ.get("HF_TOKEN")
     hf_headers = {"Authorization": f"Bearer {hf_token}"} if hf_token else {}
     # Hugging Face files: {repo, file, dest, [rev], [name]}
-    for e in manifest.get("hf", []):
+    for e in manifest.get("hf") or []:
         url = f"https://huggingface.co/{e['repo']}/resolve/{e.get('rev', 'main')}/{e['file']}"
         fetch_url(url, e["dest"], e.get("name") or e["file"].rsplit("/", 1)[-1], hf_headers)
     # Direct links: {url, dest, [name]}
-    for e in manifest.get("urls", []):
+    for e in manifest.get("urls") or []:
         name = e.get("name") or e["url"].rsplit("/", 1)[-1].split("?")[0]
         headers = hf_headers if "huggingface.co" in e["url"] else {}
         fetch_url(e["url"], e["dest"], name, headers)
