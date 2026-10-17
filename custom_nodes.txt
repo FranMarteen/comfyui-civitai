@@ -1,4 +1,3 @@
 https://github.com/ltdrdata/ComfyUI-Manager
 https://github.com/Fannovel16/comfyui_controlnet_aux
 https://github.com/cubiq/ComfyUI_IPAdapter_plus
-https://github.com/rgthree/rgthree-comfy
