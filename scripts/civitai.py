@@ -165,19 +165,28 @@ def fetch_url(url, dest, name, headers):
     out_dir = comfy_models_dir() / dest
     out_dir.mkdir(parents=True, exist_ok=True)
     out = out_dir / name
-    if out.exists():
-        print(f"skip   {out} (exists)")
-        return
-    print(f"get    {url} -> {out}")
     part = out.with_suffix(out.suffix + ".part")
     with requests.get(url, headers=headers, stream=True, timeout=60) as r:
         if r.status_code in (401, 403):
             sys.exit("Auth required: set HF_TOKEN (https://huggingface.co/settings/tokens).")
         r.raise_for_status()
+        total = int(r.headers.get("Content-Length", 0))
+        if out.exists() and (total == 0 or out.stat().st_size == total):
+            print(f"skip   {out} (exists, {out.stat().st_size / 1e9:.2f} GB)")
+            return
+        print(f"get    {url} -> {out} ({total / 1e9:.2f} GB)")
+        done, next_mark = 0, 1 << 30
         with open(part, "wb") as fh:
             for chunk in r.iter_content(1 << 20):
                 fh.write(chunk)
-    part.rename(out)
+                done += len(chunk)
+                if done >= next_mark:
+                    print(f"       {done / 1e9:.1f} / {total / 1e9:.1f} GB", flush=True)
+                    next_mark += 1 << 30
+    if total and part.stat().st_size != total:
+        sys.exit(f"Incomplete download for {name}: {part.stat().st_size} of {total} bytes")
+    part.replace(out)
+    print(f"ok     {out}")
 
 
 def main():
