@@ -2,16 +2,30 @@
 # (https://civitai.com/models/<id>?modelVersionId=<vid>). A bare model URL grabs the latest version.
 # Folder is chosen from the Civitai model type; override with `dest`.
 civitai:
-  # - 128713                                   # checkpoint (version id)
-  # - https://civitai.com/models/122359        # LoRA, latest version
-  # - id: 123456
-  #   dest: loras
+  # Add LoRAs / finetunes here, e.g.:
+  # - 2650268                                  # IntoRealism (SDXL checkpoint)
+  # - https://civitai.com/models/1662740       # Wan 14B t2v LoRA, latest version
 
 # Hugging Face files (set HF_TOKEN for gated repos)
 hf:
-  # - repo: stabilityai/sdxl-vae
-  #   file: sdxl_vae.safetensors
-  #   dest: vae
+  # --- Images: SDXL base (6.9 GB) ---
+  - repo: stabilityai/stable-diffusion-xl-base-1.0
+    file: sd_xl_base_1.0.safetensors
+    dest: checkpoints
+
+  # --- Video: Wan 2.1 image-to-video 480p, fp8 (fits the 24 GB L4) ---
+  - repo: Comfy-Org/Wan_2.1_ComfyUI_repackaged
+    file: split_files/diffusion_models/wan2.1_i2v_480p_14B_fp8_scaled.safetensors   # 16.4 GB
+    dest: diffusion_models
+  - repo: Comfy-Org/Wan_2.1_ComfyUI_repackaged
+    file: split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors          # 6.7 GB
+    dest: text_encoders
+  - repo: Comfy-Org/Wan_2.1_ComfyUI_repackaged
+    file: split_files/vae/wan_2.1_vae.safetensors                                    # 0.25 GB
+    dest: vae
+  - repo: Comfy-Org/Wan_2.1_ComfyUI_repackaged
+    file: split_files/clip_vision/clip_vision_h.safetensors                          # 1.3 GB
+    dest: clip_vision
 
 # Any other direct download
 urls:
