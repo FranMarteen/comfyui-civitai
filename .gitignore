@@ -1,0 +1,10 @@
+.env
+ComfyUI/
+data/
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.part
+__pycache__/
+.venv/

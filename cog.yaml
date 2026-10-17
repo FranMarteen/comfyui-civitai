@@ -1,0 +1,15 @@
+build:
+  gpu: true
+  cuda: "12.4"
+  python_version: "3.11"
+  system_packages: [git, libgl1, libglib2.0-0]
+  python_packages:
+    - torch==2.5.1
+    - torchvision
+    - requests
+    - pyyaml
+  run:
+    # Bakes ComfyUI, custom nodes and models (from models.yaml) into the image.
+    # Needs CIVITAI_TOKEN / HF_TOKEN as build secrets for gated files.
+    - bash scripts/setup.sh
+predict: "predict.py:Predictor"

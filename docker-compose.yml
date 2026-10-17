@@ -1,0 +1,21 @@
+services:
+  comfyui:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    env_file: .env
+    environment:
+      COMFY_DIR: /data/ComfyUI
+    ports:
+      - "127.0.0.1:8188:8188"   # reach it via SSH tunnel; don't expose ComfyUI publicly without auth
+    volumes:
+      - ./data:/data
+      - ./models.yaml:/app/models.yaml:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped

@@ -1,0 +1,19 @@
+# Models to pull into ComfyUI. `id` accepts a version id, or a civitai URL
+# (https://civitai.com/models/<id>?modelVersionId=<vid>). A bare model URL grabs the latest version.
+# Folder is chosen from the Civitai model type; override with `dest`.
+civitai:
+  # - 128713                                   # checkpoint (version id)
+  # - https://civitai.com/models/122359        # LoRA, latest version
+  # - id: 123456
+  #   dest: loras
+
+# Hugging Face files (set HF_TOKEN for gated repos)
+hf:
+  # - repo: stabilityai/sdxl-vae
+  #   file: sdxl_vae.safetensors
+  #   dest: vae
+
+# Any other direct download
+urls:
+  # - url: https://example.com/model.safetensors
+  #   dest: checkpoints
